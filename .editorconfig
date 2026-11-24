@@ -1,0 +1,13 @@
+root = true
+
+[*.cairo]
+indent_style = space
+indent_size = 4
+
+[*.circom]
+indent_style = space
+indent_size = 4
+
+[*.ts]
+indent_style = space
+indent_size = 2

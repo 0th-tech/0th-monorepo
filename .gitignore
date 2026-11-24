@@ -1,0 +1,5 @@
+node_modules/
+target/
+.snfoundry_cache/
+
+chains/*/deployments/devnet.env

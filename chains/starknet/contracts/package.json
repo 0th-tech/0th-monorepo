@@ -1,0 +1,9 @@
+{
+  "name": "starknet-contracts",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "starknet": "catalog:"
+  }
+}

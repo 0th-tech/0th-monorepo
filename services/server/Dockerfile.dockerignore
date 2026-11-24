@@ -1,0 +1,9 @@
+*
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!services/server/package.json
+!services/server/src
+!circuit/release/login.wasm
+!circuit/release/login.zkey
+!circuit/release/vk.json

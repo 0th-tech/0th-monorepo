@@ -1,0 +1,34 @@
+services:
+  devnet:
+    image: starknetfoundation/starknet-devnet-rs:0.11.0
+    network_mode: host
+    command: [--seed, "0", --port, "${DEVNET_PORT:-}"]
+    healthcheck:
+      test:
+        [
+          CMD,
+          wget,
+          -q,
+          -O,
+          /dev/null,
+          "http://127.0.0.1:${DEVNET_PORT:-}/is_alive",
+        ]
+      interval: 1s
+      retries: 30
+
+  server:
+    image: 0th-server
+    network_mode: host
+    env_file:
+      - chains/starknet/networks/${NETWORK:-devnet}.env
+      - chains/starknet/deployments/${NETWORK:-devnet}.env
+    healthcheck:
+      test:
+        [
+          CMD,
+          node,
+          -e,
+          "fetch('http://127.0.0.1:' + process.env.SERVER_PORT).catch(() => process.exit(1))",
+        ]
+      interval: 1s
+      retries: 60

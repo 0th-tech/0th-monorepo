@@ -1,0 +1,8 @@
+[workspace]
+members = ["verifier"]
+
+[workspace.scripts]
+test = "snforge test"
+
+[workspace.tool.scarb]
+allow-prebuilt-plugins = ["snforge_std"]

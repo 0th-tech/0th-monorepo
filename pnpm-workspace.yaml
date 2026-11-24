@@ -1,0 +1,10 @@
+packages:
+  - circuit
+  - chains/*/contracts
+  - services/*
+  - examples/*
+
+catalog:
+  garaga: 1.1.0
+  snarkjs: 0.7.6
+  starknet: 10.8.0

@@ -1,0 +1,7 @@
+{
+  "name": "0th",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@12.21.0"
+}
