@@ -1,0 +1,4 @@
+node_modules/
+target/
+.snfoundry_cache/
+.venv/

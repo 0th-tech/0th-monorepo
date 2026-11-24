@@ -1,0 +1,24 @@
+[package]
+name = "verifier"
+version = "0.1.0"
+edition = "2024_07"
+
+[dependencies]
+garaga.workspace = true
+starknet.workspace = true
+
+[dev-dependencies]
+snforge_std.workspace = true
+assert_macros.workspace = true
+
+[[target.starknet-contract]]
+casm = true
+casm-add-pythonic-hints = true
+
+[lib]
+
+[scripts]
+test.workspace = true
+
+[tool]
+scarb.workspace = true
