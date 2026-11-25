@@ -1,7 +1,8 @@
 FROM debian:trixie-slim
 
+# Needed to build the C++ witness generator
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl ca-certificates \
+    curl ca-certificates g++ make libgmp-dev nlohmann-json3-dev nasm \
     && rm -rf /var/lib/apt/lists/*
 
 ARG CIRCOM_VERSION=v2.2.3

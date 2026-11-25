@@ -9,9 +9,10 @@ RUN = docker run --rm --platform linux/amd64 --user "$$(id -u):$$(id -g)" -v "$(
 
 SNARKJS = pnpm exec snarkjs
 
-target/login.r1cs target/login_js/login.wasm &: src/login.circom | image
+# The r1cs and both witness generators need the same -O level, or the signal order won't match
+target/login.r1cs target/login_js/login.wasm target/login_cpp/login.cpp &: src/login.circom | image
 	mkdir -p target
-	$(RUN) circom src/login.circom --r1cs --wasm -o target
+	$(RUN) circom src/login.circom --r1cs --wasm --c --O2 -o target
 
 build: target/login.r1cs
 
@@ -23,14 +24,18 @@ target/pot.ptau:
 	$(SNARKJS) powersoftau prepare phase2 target/pot_1.ptau $@
 
 # Whoever runs this setup could forge proofs, so its keys are for testnets only
-release: target/login.r1cs target/pot.ptau
-	mkdir -p release
+release: target/login.r1cs target/login_cpp/login.cpp target/pot.ptau
+	rm -rf release && mkdir release
 	$(SNARKJS) groth16 setup target/login.r1cs target/pot.ptau target/login_0.zkey
 	$(SNARKJS) zkey contribute target/login_0.zkey release/login.zkey -e="$$(openssl rand -hex 32)"
 	$(SNARKJS) zkey export verificationkey release/login.zkey release/vk.json
-	cp target/login_js/login.wasm release/
-	$(SNARKJS) groth16 fullprove fixtures/input.json release/login.wasm release/login.zkey \
-		release/proof.json release/public.json
+# The binary loads <its path>.dat, so both files keep the same name
+	$(RUN) make -s -C target/login_cpp
+	cp target/login_cpp/login release/login-witness
+	cp target/login_cpp/login.dat release/login-witness.dat
+# Uses the server's witness generator, so the release tests it
+	$(RUN) release/login-witness fixtures/input.json target/fixture.wtns
+	$(SNARKJS) groth16 prove release/login.zkey target/fixture.wtns release/proof.json release/public.json
 	$(SNARKJS) groth16 verify release/vk.json release/public.json release/proof.json
 
 test: build

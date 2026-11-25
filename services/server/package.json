@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "garaga": "catalog:",
-    "snarkjs": "catalog:",
     "starknet": "catalog:"
   },
   "devDependencies": {

@@ -4,6 +4,8 @@
 !pnpm-workspace.yaml
 !services/server/package.json
 !services/server/src
-!circuit/release/login.wasm
+!circuit/fixtures/input.json
+!circuit/release/login-witness
+!circuit/release/login-witness.dat
 !circuit/release/login.zkey
 !circuit/release/vk.json
