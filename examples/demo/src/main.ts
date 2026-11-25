@@ -1,4 +1,4 @@
-import { RpcProvider } from "starknet";
+import { RpcProvider, stark } from "starknet";
 
 // Vite inlines import.meta.env at build time, so an unset variable is undefined in the bundle
 function need(name: string) {
@@ -14,32 +14,41 @@ const verifier = need("VITE_VERIFIER");
 const log = document.getElementById("log")!;
 const say = (line: string) => (log.textContent += line + "\n");
 
-const randomFactor = () => BigInt(1 + Math.floor(Math.random() * 1000));
-
 async function run() {
   log.textContent = "";
   try {
-    const a = randomFactor();
-    const b = randomFactor();
+    const now = Math.floor(Date.now() / 1000);
+    const input = {
+      identity: stark.randomAddress(),
+      key_hash: stark.randomAddress(),
+      iat: String(now),
+      session_key: stark.randomAddress(),
+      expiry: String(now + 3600),
+    };
     const res = await fetch(`${serverUrl}/prove`, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ a: String(a), b: String(b) }),
+      body: JSON.stringify(input),
     });
     const body = await res.json();
     if (!res.ok) throw new Error(body.error);
-    say(`proof of ${a} * ${b} = ${a * b}: ${body.proof.length} felts`);
+    say(`proof: ${body.proof.length} felts`);
 
-    // The verifier returns 0 for Ok, then the number of public values, then c as two 128-bit halves
-    const [variant, , low, high] = await provider.callContract({
+    // The verifier returns 0 for Ok, the number of public values, then each value as two 128-bit halves
+    const [variant, , ...halves] = await provider.callContract({
       contractAddress: verifier,
       entrypoint: "verify_groth16_proof_bn254",
       calldata: body.proof,
     });
     if (BigInt(variant!) !== 0n)
       throw new Error("the verifier rejected the proof");
-    const c = BigInt(low!) + (BigInt(high!) << 128n);
-    say(`verifier on chain: valid, public value c = ${c}`);
+    Object.entries(input).forEach(([name, sent], i) => {
+      const proved =
+        BigInt(halves[2 * i]!) + (BigInt(halves[2 * i + 1]!) << 128n);
+      say(
+        `${name}: ${proved === BigInt(sent) ? "as sent" : `${proved}, sent ${sent}`}`,
+      );
+    });
   } catch (e) {
     say(`error: ${e}`);
     console.error(e);
