@@ -23,11 +23,11 @@ pub mod Account {
         Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
         StoragePointerWriteAccess,
     };
-    use starknet::{ContractAddress, get_block_timestamp, get_caller_address, get_tx_info};
+    use starknet::{ClassHash, get_block_timestamp, get_caller_address, get_tx_info};
 
     // Verifier
     use verifier::groth16_verifier::{
-        IGroth16VerifierBN254Dispatcher, IGroth16VerifierBN254DispatcherTrait,
+        IGroth16VerifierBN254DispatcherTrait, IGroth16VerifierBN254LibraryDispatcher,
     };
     use super::MAX_SESSION;
 
@@ -46,7 +46,7 @@ pub mod Account {
     struct Storage {
         #[substorage(v0)]
         src5: SRC5Component::Storage,
-        verifier: ContractAddress,
+        verifier_class: ClassHash,
         identity_hash: u256, // H(iss, aud, sub, salt), BN254 field element
         sessions: Map<felt252, u64>,
     }
@@ -67,10 +67,10 @@ pub mod Account {
     }
 
     #[constructor]
-    fn constructor(ref self: ContractState, verifier: ContractAddress, identity_hash: u256) {
+    fn constructor(ref self: ContractState, verifier_class: ClassHash, identity_hash: u256) {
         self.src5.register_interface(ISRC6_ID);
 
-        self.verifier.write(verifier);
+        self.verifier_class.write(verifier_class);
         self.identity_hash.write(identity_hash);
     }
 
@@ -92,7 +92,7 @@ pub mod Account {
         ref self: ContractState,
         class_hash: felt252,
         contract_address_salt: felt252,
-        verifier: ContractAddress,
+        verifier_class: ClassHash,
         identity_hash: u256,
     ) -> felt252 {
         validate_transaction(ref self)
@@ -138,7 +138,10 @@ pub mod Account {
 
     // Runs in validation, before any fee is charged, so a false proof costs nothing
     fn register_session(ref self: ContractState, session_key: felt252, proof: Span<felt252>) {
-        let inputs = IGroth16VerifierBN254Dispatcher { contract_address: self.verifier.read() }
+        // Validation may not call another contract, so the verifier's code runs as a library call
+        let inputs = IGroth16VerifierBN254LibraryDispatcher {
+            class_hash: self.verifier_class.read(),
+        }
             .verify_groth16_proof_bn254(proof)
             .expect('invalid proof');
 

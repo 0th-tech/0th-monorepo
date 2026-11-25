@@ -5,7 +5,10 @@ use account::account::IAccountDispatcher;
 use openzeppelin_interfaces::accounts::{ISRC6Dispatcher, ISRC6DispatcherTrait};
 
 // Snforge
-use snforge_std::start_cheat_block_timestamp_global;
+use snforge_std::{DeclareResultTrait, declare, start_cheat_block_timestamp_global};
+
+// Starknet
+use starknet::SyscallResultTrait;
 
 // Tests
 use crate::utils::helpers::{
@@ -17,10 +20,10 @@ pub fn setup(verifier: ByteArray, identity_hash: u256) -> IAccountDispatcher {
     // The clock starts one day before the fixture expires
     start_cheat_block_timestamp_global(EXPIRY - 24 * 3600);
 
-    let verifier_address = deploy_contract(verifier, array![]);
+    let verifier_class = *declare(verifier).unwrap_syscall().contract_class().class_hash;
 
     let mut calldata = array![];
-    Serde::serialize(@verifier_address, ref calldata);
+    Serde::serialize(@verifier_class, ref calldata);
     Serde::serialize(@identity_hash, ref calldata);
     IAccountDispatcher { contract_address: deploy_contract("Account", calldata) }
 }

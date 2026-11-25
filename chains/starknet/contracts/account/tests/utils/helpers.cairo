@@ -11,7 +11,7 @@ use snforge_std::{
 };
 
 // Starknet
-use starknet::{ContractAddress, SyscallResultTrait};
+use starknet::{ClassHash, ContractAddress, SyscallResultTrait};
 
 // From the circuit's fixture input
 pub const EXPIRY: u64 = 1800000000;
@@ -33,7 +33,7 @@ pub trait IDeployValidator<T> {
         ref self: T,
         class_hash: felt252,
         contract_address_salt: felt252,
-        verifier: ContractAddress,
+        verifier_class: ClassHash,
         identity_hash: u256,
     ) -> felt252;
 }

@@ -67,6 +67,8 @@ const accountClass = await declare(
   read("target/release/account_Account.compiled_contract_class.json"),
 );
 
-const lines = `VERIFIER=${contract_address}\nACCOUNT_CLASS_HASH=${accountClass}\n`;
+const lines =
+  `VERIFIER=${contract_address}\nVERIFIER_CLASS_HASH=${verifierClass}\n` +
+  `ACCOUNT_CLASS_HASH=${accountClass}\n`;
 writeFileSync(deployment, lines);
 console.log(lines.trim());

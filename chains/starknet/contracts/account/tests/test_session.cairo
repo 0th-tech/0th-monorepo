@@ -2,9 +2,6 @@
 use account::account::Account::{Event, SessionRegistered};
 use account::account::{IAccountDispatcherTrait, MAX_SESSION};
 
-// Core
-use core::num::traits::Zero;
-
 // OpenZeppelin
 use openzeppelin_interfaces::accounts::ISRC6DispatcherTrait;
 
@@ -45,7 +42,7 @@ fn test_validate_deploy_registers_session() {
     cheat_tx(account.contract_address, login_signature(TX_HASH, proof.span()).span());
     let deploy = IDeployValidatorDispatcher { contract_address: account.contract_address };
 
-    let result = deploy.__validate_deploy__(0, 0, Zero::zero(), fixture_identity());
+    let result = deploy.__validate_deploy__(0, 0, 0.try_into().unwrap(), fixture_identity());
 
     assert_eq!(result, starknet::VALIDATED);
     assert_eq!(account.get_session_expiry(session_key(inputs.span())), EXPIRY);
