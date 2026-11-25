@@ -5,6 +5,9 @@ packages:
   - examples/*
 
 catalog:
+  "@types/node": ^26.6.6
   garaga: 1.1.0
+  prettier: 3.10.1
   snarkjs: 0.7.6
   starknet: 10.8.0
+  typescript: 7.0.2

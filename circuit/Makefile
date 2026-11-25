@@ -1,4 +1,4 @@
-.PHONY: image build release test clean fclean
+.PHONY: image build release test typecheck fmt fmt-check clean fclean
 
 IMAGE = 0th-circuit
 
@@ -35,6 +35,15 @@ release: target/login.r1cs target/pot.ptau
 
 test: build
 	pnpm test
+
+typecheck:
+	pnpm run typecheck
+
+fmt:
+	pnpm run fmt
+
+fmt-check:
+	pnpm run fmt-check
 
 clean:
 	rm -rf target

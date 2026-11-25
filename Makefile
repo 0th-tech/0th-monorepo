@@ -1,4 +1,4 @@
-.PHONY: tools test clean devnet up down logs deploy demo
+.PHONY: tools test typecheck fmt fmt-check clean devnet up down logs deploy demo
 
 tools:
 	asdf plugin add nodejs
@@ -39,6 +39,24 @@ test:
 	$(MAKE) -C circuit test
 	$(MAKE) -C chains/starknet/contracts test
 	$(MAKE) -C services/server test
+
+typecheck:
+	$(MAKE) -C circuit typecheck
+	$(MAKE) -C chains/starknet/contracts typecheck
+	$(MAKE) -C services/server typecheck
+	$(MAKE) -C examples/demo typecheck
+
+fmt:
+	$(MAKE) -C circuit fmt
+	$(MAKE) -C chains/starknet/contracts fmt
+	$(MAKE) -C services/server fmt
+	$(MAKE) -C examples/demo fmt
+
+fmt-check:
+	$(MAKE) -C circuit fmt-check
+	$(MAKE) -C chains/starknet/contracts fmt-check
+	$(MAKE) -C services/server fmt-check
+	$(MAKE) -C examples/demo fmt-check
 
 clean:
 	$(MAKE) -C circuit clean

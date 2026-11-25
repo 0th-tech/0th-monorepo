@@ -1,4 +1,4 @@
-.PHONY: image verifier build test gas deploy clean fclean
+.PHONY: image verifier build test gas deploy typecheck fmt fmt-check clean fclean
 
 IMAGE = 0th-contracts
 
@@ -36,6 +36,17 @@ gas:
 deploy: build
 	mkdir -p $(dir $(DEPLOYMENT))
 	node deploy.ts $(DEPLOYMENT)
+
+typecheck:
+	pnpm run typecheck
+
+fmt:
+	scarb fmt
+	pnpm run fmt
+
+fmt-check:
+	scarb fmt --check
+	pnpm run fmt-check
 
 clean:
 	rm -rf target .snfoundry_cache

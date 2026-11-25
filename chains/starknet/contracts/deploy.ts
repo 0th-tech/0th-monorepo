@@ -52,7 +52,9 @@ if (BigInt(msmClass) !== GARAGA_MSM_CLASS)
 
 const verifierClass = await declare(
   read("target/release/verifier_Groth16VerifierBN254.contract_class.json"),
-  read("target/release/verifier_Groth16VerifierBN254.compiled_contract_class.json"),
+  read(
+    "target/release/verifier_Groth16VerifierBN254.compiled_contract_class.json",
+  ),
 );
 const { contract_address, transaction_hash } = await deployer.deployContract({
   classHash: verifierClass,

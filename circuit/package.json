@@ -4,9 +4,15 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "test": "node --test \"test/**/*.test.ts\""
+    "test": "node --test \"test/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit",
+    "fmt": "prettier --write test",
+    "fmt-check": "prettier --check test"
   },
   "devDependencies": {
-    "snarkjs": "catalog:"
+    "@types/node": "catalog:",
+    "prettier": "catalog:",
+    "snarkjs": "catalog:",
+    "typescript": "catalog:"
   }
 }

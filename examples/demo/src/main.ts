@@ -36,7 +36,8 @@ async function run() {
       entrypoint: "verify_groth16_proof_bn254",
       calldata: body.proof,
     });
-    if (BigInt(variant!) !== 0n) throw new Error("the verifier rejected the proof");
+    if (BigInt(variant!) !== 0n)
+      throw new Error("the verifier rejected the proof");
     const c = BigInt(low!) + (BigInt(high!) << 128n);
     say(`verifier on chain: valid, public value c = ${c}`);
   } catch (e) {
