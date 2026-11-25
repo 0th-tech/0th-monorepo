@@ -61,5 +61,12 @@ const { contract_address, transaction_hash } = await deployer.deployContract({
 });
 await provider.waitForTransaction(transaction_hash);
 
-writeFileSync(deployment, `VERIFIER=${contract_address}\n`);
-console.log(`VERIFIER=${contract_address}`);
+// Each account deploys itself, so only its class is declared here
+const accountClass = await declare(
+  read("target/release/account_Account.contract_class.json"),
+  read("target/release/account_Account.compiled_contract_class.json"),
+);
+
+const lines = `VERIFIER=${contract_address}\nACCOUNT_CLASS_HASH=${accountClass}\n`;
+writeFileSync(deployment, lines);
+console.log(lines.trim());

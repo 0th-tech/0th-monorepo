@@ -1,5 +1,5 @@
 [workspace]
-members = ["verifier"]
+members = ["account", "verifier"]
 
 [workspace.scripts]
 test = "snforge test"

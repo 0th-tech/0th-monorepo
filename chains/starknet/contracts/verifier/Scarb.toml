@@ -15,6 +15,9 @@ assert_macros = "2.18.0"
 casm = true
 casm-add-pythonic-hints = true
 
+# The account imports the verifier's interface
+[lib]
+
 [scripts]
 test.workspace = true
 
