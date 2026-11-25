@@ -1,0 +1,46 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  circuit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/node
+      - run: make -C circuit test typecheck fmt-check
+
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: software-mansion/setup-scarb@v1
+      - uses: foundry-rs/setup-snfoundry@v6
+        with:
+          tool-versions: .tool-versions
+      - uses: ./.github/actions/node
+      - run: make -C chains/starknet/contracts test typecheck fmt-check
+      # The committed verifier is what Garaga generates from the release's vk.json
+      - run: make -C chains/starknet/contracts verifier
+      - run: git status --porcelain && test -z "$(git status --porcelain)"
+
+  server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/node
+      - run: make -C services/server test typecheck fmt-check
+      # The image builds only if the release's witness generator and proving key fit its vk.json
+      - run: make -C services/server image
+
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/node
+      - run: make -C examples/demo typecheck fmt-check

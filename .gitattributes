@@ -1,0 +1,6 @@
+circuit/release/** linguist-generated=true -diff
+chains/starknet/contracts/verifier/src/** linguist-generated=true
+chains/starknet/contracts/verifier/tests/proof_calldata.txt linguist-generated=true -diff
+
+# The release's public values stay readable in a review
+circuit/release/public.json -linguist-generated diff
