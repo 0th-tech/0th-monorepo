@@ -6,6 +6,7 @@
     "lib": ["ESNext", "DOM"],
     "types": ["vite/client"],
     "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
     "verbatimModuleSyntax": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,

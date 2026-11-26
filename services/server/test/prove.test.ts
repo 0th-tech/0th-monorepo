@@ -15,12 +15,11 @@ test("toCalldata gives the calldata the contracts' tests verify, for the release
     JSON.parse(read("circuit/release/public.json")),
   );
 
-  // Garaga's CLI writes the calldata without the Span length its npm package leads with
   const cli = read(
     "chains/starknet/contracts/verifier/tests/proof_calldata.txt",
   )
     .trim()
     .split("\n")
     .map((felt) => String(BigInt(felt)));
-  assert.deepEqual(calldata, [String(cli.length), ...cli]);
+  assert.deepEqual(calldata, cli);
 });

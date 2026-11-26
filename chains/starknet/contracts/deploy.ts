@@ -56,19 +56,12 @@ const verifierClass = await declare(
     "target/release/verifier_Groth16VerifierBN254.compiled_contract_class.json",
   ),
 );
-const { contract_address, transaction_hash } = await deployer.deployContract({
-  classHash: verifierClass,
-});
-await provider.waitForTransaction(transaction_hash);
-
 // Each account deploys itself, so only its class is declared here
 const accountClass = await declare(
   read("target/release/account_Account.contract_class.json"),
   read("target/release/account_Account.compiled_contract_class.json"),
 );
 
-const lines =
-  `VERIFIER=${contract_address}\nVERIFIER_CLASS_HASH=${verifierClass}\n` +
-  `ACCOUNT_CLASS_HASH=${accountClass}\n`;
+const lines = `VERIFIER_CLASS_HASH=${verifierClass}\nACCOUNT_CLASS_HASH=${accountClass}\n`;
 writeFileSync(deployment, lines);
 console.log(lines.trim());

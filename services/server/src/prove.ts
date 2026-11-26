@@ -32,6 +32,8 @@ export async function loadCircuit(dir: string): Promise<Circuit> {
   };
 }
 
+// The proof as the account reads it from a signature. garaga's npm package leads with the Span
+// length, which a signature does not carry
 export const toCalldata = (
   circuit: Circuit,
   proof: object,
@@ -41,7 +43,9 @@ export const toCalldata = (
     parseGroth16ProofFromObject(proof, publicValues.map(BigInt)),
     circuit.verificationKey,
     CurveId.BN254,
-  ).map(String);
+  )
+    .slice(1)
+    .map(String);
 
 export async function prove(circuit: Circuit, input: object) {
   const out = await mkdtemp(join(tmpdir(), "prove-"));

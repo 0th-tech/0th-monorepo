@@ -212,6 +212,41 @@ importers:
         specifier: 'catalog:'
         version: 7.0.2
 
+  chains/starknet/e2e:
+    dependencies:
+      '@0th/starknet':
+        specifier: workspace:*
+        version: link:../sdk
+      starknet:
+        specifier: 'catalog:'
+        version: 10.8.0(typescript@7.0.2)(zod@4.6.7)
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.6.6
+      prettier:
+        specifier: 'catalog:'
+        version: 3.10.1
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+
+  chains/starknet/sdk:
+    dependencies:
+      starknet:
+        specifier: 'catalog:'
+        version: 10.8.0(typescript@7.0.2)(zod@4.6.7)
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.6.6
+      prettier:
+        specifier: 'catalog:'
+        version: 3.10.1
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+
   circuit:
     devDependencies:
       '@types/node':
@@ -229,6 +264,9 @@ importers:
 
   examples/demo:
     dependencies:
+      '@0th/starknet':
+        specifier: ^0.1.0
+        version: link:../../chains/starknet/sdk
       starknet:
         specifier: 10.8.0
         version: 10.8.0(typescript@7.0.2)(zod@4.6.7)
@@ -240,7 +278,7 @@ importers:
         specifier: 7.0.2
         version: 7.0.2
       vite:
-        specifier: ^8.3.8
+        specifier: 8.3.8
         version: 8.3.8(@types/node@26.6.6)
 
   services/server:

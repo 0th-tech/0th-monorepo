@@ -1,6 +1,8 @@
 packages:
   - circuit
   - chains/*/contracts
+  - chains/*/sdk
+  - chains/*/e2e
   - services/*
   - examples/*
 
@@ -11,3 +13,7 @@ catalog:
   snarkjs: 0.7.6
   starknet: 10.8.0
   typescript: 7.0.2
+
+# The demo names @0th/starknet by a version range, so a copy of it installs from npm; inside the
+# repo the range resolves to the workspace's package
+linkWorkspacePackages: true
